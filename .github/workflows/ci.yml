@@ -1,0 +1,31 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      REASONR_TEST_MONGODB: mongodb://localhost:27018/?directConnection=true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache-dependency-path: go.sum
+      - name: mongodb (replica set)
+        run: make mongo-up
+      - name: gofmt
+        run: make fmt-check
+      - name: vet
+        run: make vet
+      - name: staticcheck
+        run: |
+          go install honnef.co/go/tools/cmd/staticcheck@2026.2.2
+          PATH="$(go env GOPATH)/bin:$PATH" make lint
+      - name: test
+        run: make test-race
