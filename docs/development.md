@@ -1,7 +1,7 @@
 # Development and tests
 
 ```bash
-docker run -d --name reasonr-mongo -p 27018:27017 mongo:7 --replSet rs0 --bind_ip_all
+docker run -d --name reasonr-mongo -p 27018:27017 mongo:9.0 --replSet rs0 --bind_ip_all
 docker exec reasonr-mongo mongosh --quiet --eval 'rs.initiate({_id:"rs0",members:[{_id:0,host:"localhost:27017"}]})'
 REASONR_TEST_MONGODB='mongodb://localhost:27018/?directConnection=true' go test ./...
 ```

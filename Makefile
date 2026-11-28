@@ -25,7 +25,7 @@ test-race:
 	$(GO) test -race ./...
 
 mongo-up:
-	docker run -d --name reasonr-mongo -p 27018:27017 mongo:7 --replSet rs0 --bind_ip_all
+	docker run -d --name reasonr-mongo -p 27018:27017 mongo:9.0 --replSet rs0 --bind_ip_all
 	until docker exec reasonr-mongo mongosh --quiet --eval 'db.runCommand({ping:1}).ok' >/dev/null 2>&1; do sleep 1; done
 	docker exec reasonr-mongo mongosh --quiet --eval 'rs.initiate({_id:"rs0",members:[{_id:0,host:"localhost:27017"}]})'
 
